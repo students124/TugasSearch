@@ -3,7 +3,9 @@ from src import Graph
 def main():
     G = Graph()
 
-    k = G.generate(10)
+    A = int(input("Masukan: "))
+
+    k = G.generate(A)
     print(k)
 
     k = G.grapToExcel()
