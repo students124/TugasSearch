@@ -1,0 +1,17 @@
+.venv
+/.venv
+
+test
+/test
+
+excel
+/excel
+
+src/__pycache__
+/src/__pycache__
+
+src/GUI.py
+/src/GUI.py
+
+test.py
+/test.py
