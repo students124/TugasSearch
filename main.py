@@ -17,6 +17,12 @@ def main():
     k = G.neighborsToExcel()
     print(k)
 
+    k = G.weight()
+    print(k)
+
+    k = G.weightToExcel()
+    print(k)
+
     G.printExcel()
 
 if __name__ == "__main__":
