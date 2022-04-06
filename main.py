@@ -1,3 +1,4 @@
+from xml.etree.ElementTree import TreeBuilder
 from src import Graph
 
 def main():
@@ -24,6 +25,27 @@ def main():
     print(k)
 
     G.printExcel()
+
+    while True:
+        src_node = int(input("Source Node : "))
+        fn_node = int(input("Final Node : "))
+        algorithm = input("algorthm to solve (inform/uninform) : ").lower()
+
+        match algorithm:
+            case "inform":
+                G.best_first_search(src_node, fn_node)
+            case "uninform" : 
+                print(G.bfs(src_node, fn_node))
+            case _:
+                print("The input was incorrect please try again")
+        
+        is_continue = input("continue? (Y/N)").upper()
+
+        match is_continue:
+            case "Y":
+                ...
+            case "N":
+                break
 
 if __name__ == "__main__":
     main()

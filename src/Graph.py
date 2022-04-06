@@ -1,7 +1,9 @@
 import os
+from turtle import pen
 import pandas as pd
 import numpy as np
 import networkx as nx
+from queue import PriorityQueue
 
 class Graph:
     """Create a class of Graph"""
@@ -160,44 +162,81 @@ class Graph:
         # if self.grapExcel == None or self.neighborsExcel == None:
         #     return
         
+        # Check on the directory
         if dir == None:
             if "excel" not in os.listdir('../TugasSearch'):
+                # create a directory to store a excel file
                 os.mkdir("../TugasSearch/excel")
                 self.grapExcel.to_excel(f'excel/graph.xlsx')
                 self.neighborsExcel.to_excel(f'excel/neighbors.xlsx')
                 self.weightExcel.to_excel(f'excel/weight.xlsx')
             else:
+                # if directory excel exist then just update the file or store a new one
                 self.grapExcel.to_excel(f'excel/graph.xlsx')
                 self.neighborsExcel.to_excel(f'excel/neighbors.xlsx')
                 self.weightExcel.to_excel(f'excel/weight.xlsx')
         else:
+            # if the directory is set by user the it will use that directory to store the excel file
             self.grapExcel.to_excel(f'{dir}/graph.xlsx')
             self.neighborsExcel.to_excel(f'{dir}/neighbors.xlsx')
             self.weightExcel.to_excel(f'{dir}/weight.xlsx')
 
-    def bfs(self,graph_to_search, start, end):
-        queue = [[start]]
-        visited = set()
+    def bfs(self, start, end):
 
+        N = len(self.node)
+        uniformed = {}
+        for i in range(N):
+            temp = [] 
+            for j in range(N):
+                if self.nodeWeight[i][j] > 0:
+                    temp.append(j)
+            uniformed[i] = temp
+        print(uniformed)
+
+            # maintain a queue of paths
+        queue = []
+        # push the first path into the queue
+        queue.append([start])
         while queue:
-            # Gets the first path in the queue
+            # get the first path from the queue
             path = queue.pop(0)
-
-            # Gets the last node in the path
-            vertex = path[-1]
-
-            # Checks if we got to the end
-            if vertex == end:
+            # get the last node from the path
+            node = path[-1]
+            # path found
+            if node == end:
                 return path
+            # enumerate all adjacent nodes, construct a 
+            # new path and push it into the queue
+            for adjacent in uniformed.get(node, []):
+                new_path = list(path)
+                new_path.append(adjacent)
+                queue.append(new_path)
                 
-            # We check if the current node is already in the visited nodes set in order not to recheck it
-            elif vertex not in visited:
-                # enumerate all adjacent nodes, construct a new path and push it into the queue
-                for current_neighbour in graph_to_search.get(vertex, []):
-                    new_path = list(path)
-                    new_path.append(current_neighbour)
-                    queue.append(new_path)
+    
+    def best_first_search(self, source, target):
 
-                # Mark the vertex as visited
-                visited.add(vertex)
+        N = len(self.node)
+        informed = [[] for i in range(N)]
+        for i in range(N):
+            for j in range(i):
+                if self.nodeWeight[i][j] > 0 :
+                    informed[i].append((j, self.nodeWeight[i][j]))
+                    informed[j].append((i, self.nodeWeight[i][j]))
 
+
+        visited = [0] * N
+        pq = PriorityQueue()
+        pq.put((0, source))
+        print("Path: ")
+        while not pq.empty():
+            u = pq.get()[1]
+            # Displaying the path having the lowest cost
+            print(u, end=" ")
+            if u == target:
+                break
+
+            for v, c in informed[u]:
+                if not visited[v]:
+                    visited[v] = True
+                    pq.put((c, v))
+        print()
