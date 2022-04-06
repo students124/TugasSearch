@@ -1,4 +1,4 @@
-# Tugas Kelompok no 1 Sistem Cedas
+# Tugas Kelompok no 1 Sistem Cerdas
  Dengan Deskripsi tugas sebagai berikut:
  
  
